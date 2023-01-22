@@ -12,28 +12,8 @@ Parameters:
     Type: String
     Default: 10.0.0.0/16
 
-  PublicSubnet1CIDR:
-    Description: The IP range (CIDR notation) for the public subnet in the first Availability Zone
-    Type: String
-    Default: 10.0.0.0/24
-
-  PublicSubnet2CIDR:
-    Description: The IP range (CIDR notation) for the public subnet in the second Availability Zone
-    Type: String
-    Default: 10.0.1.0/24
-
-  PrivateSubnet1CIDR:
-    Description: The IP range (CIDR notation) for the private subnet in the first Availability Zone
-    Type: String
-    Default: 10.0.2.0/24
-
-  PrivateSubnet2CIDR:
-    Description: The IP range (CIDR notation) for the private subnet in the second Availability Zone
-    Type: String
-    Default: 10.0.3.0/24
-
 Resources:
-  VPC:
+  udagramVPC:
     Type: AWS::EC2::VPC
     Properties:
       CidrBlock: !Ref VpcCIDR
@@ -53,14 +33,14 @@ Resources:
     Type: AWS::EC2::VPCGatewayAttachment
     Properties:
       InternetGatewayId: !Ref InternetGateway
-      VpcId: !Ref VPC
+      VpcId: !Ref udagramVPC
 
   PublicSubnet1:
     Type: AWS::EC2::Subnet
     Properties:
-      VpcId: !Ref VPC
+      VpcId: !Ref udagramVPC
       AvailabilityZone: !Select [ 0, !GetAZs '' ]
-      CidrBlock: !Ref PublicSubnet1CIDR
+      CidrBlock: 10.0.0.0/24
       MapPublicIpOnLaunch: true
       Tags:
         - Key: Name
@@ -69,9 +49,9 @@ Resources:
   PublicSubnet2:
     Type: AWS::EC2::Subnet
     Properties:
-      VpcId: !Ref VPC
+      VpcId: !Ref udagramVPC
       AvailabilityZone: !Select [ 1, !GetAZs '' ]
-      CidrBlock: !Ref PublicSubnet2CIDR
+      CidrBlock: 10.0.1.0/24
       MapPublicIpOnLaunch: true
       Tags:
         - Key: Name
@@ -80,9 +60,9 @@ Resources:
   PrivateSubnet1:
     Type: AWS::EC2::Subnet
     Properties:
-      VpcId: !Ref VPC
+      VpcId: !Ref udagramVPC
       AvailabilityZone: !Select [ 0, !GetAZs '' ]
-      CidrBlock: !Ref PrivateSubnet1CIDR
+      CidrBlock: 10.0.2.0/24
       MapPublicIpOnLaunch: false
       Tags:
         - Key: Name
@@ -91,9 +71,9 @@ Resources:
   PrivateSubnet2:
     Type: AWS::EC2::Subnet
     Properties:
-      VpcId: !Ref VPC
+      VpcId: !Ref udagramVPC
       AvailabilityZone: !Select [ 1, !GetAZs '' ]
-      CidrBlock: !Ref PrivateSubnet2CIDR
+      CidrBlock: 10.0.3.0/24
       MapPublicIpOnLaunch: false
       Tags:
         - Key: Name
@@ -126,7 +106,7 @@ Resources:
   PublicRouteTable:
     Type: AWS::EC2::RouteTable
     Properties:
-      VpcId: !Ref VPC
+      VpcId: !Ref udagramVPC
       Tags:
         - Key: Name
           Value: !Sub ${EnvironmentName} Public Routes
@@ -155,7 +135,7 @@ Resources:
   PrivateRouteTable1:
     Type: AWS::EC2::RouteTable
     Properties:
-      VpcId: !Ref VPC
+      VpcId: !Ref udagramVPC
       Tags:
         - Key: Name
           Value: !Sub ${EnvironmentName} Private Routes (AZ1)
@@ -176,7 +156,7 @@ Resources:
   PrivateRouteTable2:
     Type: AWS::EC2::RouteTable
     Properties:
-      VpcId: !Ref VPC
+      VpcId: !Ref udagramVPC
       Tags:
         - Key: Name
           Value: !Sub ${EnvironmentName} Private Routes (AZ2)
@@ -199,7 +179,7 @@ Outputs:
 
   VPC:
     Description: A reference to the created VPC
-    Value: !Ref VPC
+    Value: !Ref udagramVPC
     Export:
       Name: !Sub ${EnvironmentName}-VPCID
 
