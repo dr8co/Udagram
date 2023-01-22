@@ -334,7 +334,7 @@ Resources:
 
 Outputs:
 
-  VPC:
+  udagramVPC:
     Description: A reference to the created VPC
     Value: !Ref udagramVPC
     Export:
@@ -370,26 +370,8 @@ Outputs:
     Export:
       Name: !Sub ${EnvironmentName}-PRIV-NETS
 
-  PublicSubnet1:
-    Description: A reference to the public subnet in the 1st Availability Zone
-    Value: !Ref PublicSubnet1
+  UdagramLoadBalanceDNS:
+    Description: Public URL of the Load Balancer
+    Value: !Join [ "", [ "http://", !GetAtt WebAppLB.DNSName ]]
     Export:
-      Name: !Sub ${EnvironmentName}-PUB1-SN
-
-  PublicSubnet2:
-    Description: A reference to the public subnet in the 2nd Availability Zone
-    Value: !Ref PublicSubnet2
-    Export:
-      Name: !Sub ${EnvironmentName}-PUB2-SN
-
-  PrivateSubnet1:
-    Description: A reference to the private subnet in the 1st Availability Zone
-    Value: !Ref PrivateSubnet1
-    Export:
-      Name: !Sub ${EnvironmentName}-PRI1-SN
-
-  PrivateSubnet2:
-    Description: A reference to the private subnet in the 2nd Availability Zone
-    Value: !Ref PrivateSubnet2
-    Export:
-      Name: !Sub ${EnvironmentName}-PRI2-SN
+      Name: !Sub ${EnvironmentName} URL
