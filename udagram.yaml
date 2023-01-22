@@ -1,5 +1,5 @@
 AWSTemplateFormatVersion: "2010-09-09"
-Description: Provisions infrastructure for the deployment of Udagram.
+Description: Deploys a high-availability web app (Udagram) using CloudFormation.
 
 Parameters:
 
@@ -15,6 +15,20 @@ Parameters:
   AMItoUse:
     Description: AMI to use for the base image
     Type: String
+    Default: ami-0135afc6d226a70a4
+
+  ServerInstanceType:
+    Description: EC2 Instance type to use for the servers
+    Type: String
+    AllowedValues:
+      - t2.medium
+      - t2.xlarge
+      - t2.2xlarge
+      - t3.medium
+      - t3.large
+      - t3.xlarge
+      - t3.2xlarge
+    Default: t3.medium
 
 Resources:
   udagramVPC:
@@ -181,7 +195,7 @@ Resources:
   S3RoleReadOnly:
     Type: AWS::IAM::Role
     Properties:
-      RoleName: !Sub ${EnvironmentName} S3 Role
+      RoleName: !Sub ${EnvironmentName}-S3Role
       AssumeRolePolicyDocument:
         Version: "2012-10-17"
         Statement:
@@ -196,7 +210,7 @@ Resources:
   S3RolePolicy:
     Type: AWS::IAM::Policy
     Properties:
-      PolicyName: !Sub ${EnvironmentName} S3 Policy
+      PolicyName: !Sub ${EnvironmentName}-S3Policy
       PolicyDocument:
         Version: "2012-10-17"
         Statement:
@@ -205,7 +219,8 @@ Resources:
               - s3:Get*
               - s3:List*
             Resource:
-              - # TODO: S3 Resources.
+              - arn:aws:s3:::draco-udagram
+              - arn:aws:s3:::draco-udagram/*
       Roles:
         - !Ref S3RoleReadOnly
 
@@ -262,12 +277,13 @@ Resources:
           sudo apt-get install unzip awscli apache2 -y
           sudo systemctl start apache2.service
           cd /var/www/html
-      #    # TODO Website from S3
+          aws s3 cp s3://draco-udagram/website.zip .
+          unzip -o website.zip
       ImageId: !Ref AMItoUse
       IamInstanceProfile: !Ref UdagramInstanceProfile
       SecurityGroups:
         - Ref: WebServerSecGroup
-      InstanceType: t3.medium
+      InstanceType: !Ref ServerInstanceType
       BlockDeviceMappings:
         - DeviceName: "/dev/sdk"
           Ebs:
@@ -374,4 +390,4 @@ Outputs:
     Description: Public URL of the Load Balancer
     Value: !Join [ "", [ "http://", !GetAtt WebAppLB.DNSName ]]
     Export:
-      Name: !Sub ${EnvironmentName} URL
+      Name: !Sub ${EnvironmentName}-URL
