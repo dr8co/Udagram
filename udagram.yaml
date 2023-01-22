@@ -12,6 +12,10 @@ Parameters:
     Type: String
     Default: 10.0.0.0/16
 
+  AMItoUse:
+    Description: AMI to use for the base image
+    Type: String
+
 Resources:
   udagramVPC:
     Type: AWS::EC2::VPC
@@ -247,6 +251,40 @@ Resources:
           FromPort: 0
           ToPort: 65535
           CidrIp: 0.0.0.0/0
+
+  WebAppLaunchConfig:
+    Type: AWS::AutoScaling::LaunchConfiguration
+    Properties:
+      UserData:
+        Fn::Base64: !Sub |
+          #!/bin/bash
+          sudo apt-get update -y
+          sudo apt-get install unzip awscli apache2 -y
+          sudo systemctl start apache2.service
+          cd /var/www/html
+      #    # TODO Website from S3
+      ImageId: !Ref AMItoUse
+      IamInstanceProfile: !Ref UdagramInstanceProfile
+      SecurityGroups:
+        - Ref: WebServerSecGroup
+      InstanceType: t3.medium
+      BlockDeviceMappings:
+        - DeviceName: "/dev/sdk"
+          Ebs:
+            VolumeSize: '10'
+
+  WebAppTargetGroup:
+    Type: AWS::ElasticLoadBalancingV2::TargetGroup
+    Properties:
+      HealthCheckIntervalSeconds: 10
+      HealthCheckPath: /
+      HealthCheckProtocol: HTTP
+      HealthCheckTimeoutSeconds: 8
+      HealthyThresholdCount: 2
+      Port: 80
+      Protocol: HTTP
+      UnhealthyThresholdCount: 5
+      VpcId: !Ref udagramVPC
 
 Outputs:
 
