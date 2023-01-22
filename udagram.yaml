@@ -205,6 +205,12 @@ Resources:
       Roles:
         - !Ref S3RoleReadOnly
 
+  UdagramInstanceProfile:
+    Type: AWS::IAM::InstanceProfile
+    Properties:
+      Path: /
+      Roles:
+        - !Ref S3RoleReadOnly
 
 Outputs:
 
