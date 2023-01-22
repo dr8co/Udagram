@@ -1,10 +1,18 @@
 [
   {
     "ParameterKey": "EnvironmentName",
-    "ParameterValue": "Udagram-test"
+    "ParameterValue": "Udagram"
   },
   {
     "ParameterKey": "VpcCIDR",
     "ParameterValue": "10.0.0.0/16"
+  },
+  {
+    "ParameterKey": "AMItoUse",
+    "ParameterValue": "ami-0135afc6d226a70a4"
+  },
+  {
+    "ParameterKey": "ServerInstanceType",
+    "ParameterValue": "t3.medium"
   }
 ]
