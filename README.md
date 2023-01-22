@@ -74,7 +74,7 @@ I came up with the following infrastructure diagram for the deployment of Udagra
 
 ![Udagram](./media/Udagram.svg "Udagram Infrastructure Diagram")
 
-This image was interpreted into a [CloudFormation template script](./udagram.yaml "Template script")
+This image was interpreted into a [CloudFormation template script](./udagram.yml "Template script")
 and [Parameters script](./udagram-params.json "Parameters file").
 
 The [create.sh](./create.sh) script was used to create stacks.
