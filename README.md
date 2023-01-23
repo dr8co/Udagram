@@ -108,5 +108,4 @@ The screenshot below showcases successful deployment of a dummy website by the s
 
 ![Screenshot of deployed webpage](./media/screenshot-deployed-webpage.png "Udagram")
 
-The public URL of the deployed web page (aka dummy web app) is:
-<http://udagr-WebAp-6QKPNQWH1O7R-1642883788.us-west-2.elb.amazonaws.com>
+The resources were then successfully deleted after the success of the exercise.
