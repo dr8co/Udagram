@@ -109,3 +109,4 @@ The screenshot below showcases successful deployment of a dummy website by the s
 ![Screenshot of deployed webpage](./media/screenshot-deployed-webpage.png "Udagram")
 
 The resources were then successfully deleted after the success of the exercise.
+(Update: The above URL is invalid now).
